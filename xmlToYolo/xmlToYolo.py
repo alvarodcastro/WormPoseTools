@@ -121,7 +121,7 @@ class NormalicedObject:
     self.kpVisibility = 2
 
   def __repr__(self):
-    return ("{} {} {} {} {} {} {}".format(self.classIndex, self.xCenter, self.yCenter, self.width, self.height, self.keypoints[0].coordX, self.keypoints[0].coordY), self.kpVisibility)
+    return ("{} {} {} {} {} {} {} {}".format(self.classIndex, self.xCenter, self.yCenter, self.width, self.height, self.keypoints[0].coordX, self.keypoints[0].coordY, self.kpVisibility))
 
 
 def parseXML(xmlFile):
