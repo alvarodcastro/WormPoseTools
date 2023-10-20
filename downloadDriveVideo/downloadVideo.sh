@@ -7,6 +7,6 @@ then
         --no-check-certificate "https://drive.usercontent.google.com/uc?id=${1}&export=download" -O- | 
         sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=https://drive.usercontent.google.com/uc?id=${1}&authuser=0&export=download" -O ${2} && rm -rf /tmp/cookies.txt
 else
-    echo "Not correct args"
+    echo "Not correct args. Usage: downloadVideo.sh [video_id] [outputFile]"
     echo ${1}
 fi
