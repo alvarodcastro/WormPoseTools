@@ -3,7 +3,6 @@ import os
 import shutil
 import random
 import sys
-import dataAugmentation
 
 
 # Return whether the point coordinates pased are contained on the square
@@ -125,7 +124,7 @@ class NormalicedObject:
     return ("{} {} {} {} {} {} {} {}".format(self.classIndex, self.xCenter, self.yCenter, self.width, self.height, self.keypoints[0].coordX, self.keypoints[0].coordY, self.kpVisibility))
 
 
-def parseXML(xmlFile):
+def parseXML(xmlFile, onlyKeyFrames=True):
   # Create tree element
   tree = ET.parse(xmlFile)
 
@@ -175,29 +174,33 @@ def parseXML(xmlFile):
       frameBoxX2 = markedEl.get('xbr')
       frameBoxY2 = markedEl.get('ybr')
 
-      # If track is for head then Create a Point object corresponding to the head
-      if (track.get('label') == 'head'):
-        head = Point(float(frameHeadPoints.split(
-            ',')[0]), float(frameHeadPoints.split(',')[1]))
-        # print("New head point created:{}".format(head))
+      isKeyframe = markedEl.get('keyframe')
 
-      # If track is for box then Create a Box object corresponding to the box
-      elif (track.get('label') == 'worm_box'):
-        box = Box(float(frameBoxX1), float(frameBoxY1),
-                  float(frameBoxX2), float(frameBoxY2))
-        # print("New box created:{}".format(box))
+      if (isKeyframe == '1' or not onlyKeyFrames):
 
-      # If the dictionary entry corresponding to the frame has not been created, create one
-      if (not frames.get(frameNum)):
-        # print("Frame {} added".format(frameNum))
-        # Create the ImageInfo object corresponding to the frame
-        frames[frameNum] = ImageInfo(frameNum)
+        # If track is for head then Create a Point object corresponding to the head
+        if (track.get('label') == 'head'):
+          head = Point(float(frameHeadPoints.split(
+              ',')[0]), float(frameHeadPoints.split(',')[1]))
+          # print("New head point created:{}".format(head))
 
-      # The object info found will be added to the current ImageInfo
-      if (track.get('label') == 'head'):  # Adding a head point
-        frames[frameNum].addPoint(head)
-      elif (track.get('label') == 'worm_box'):  # Adding a box points
-        frames[frameNum].addBox(box)
+        # If track is for box then Create a Box object corresponding to the box
+        elif (track.get('label') == 'worm_box'):
+          box = Box(float(frameBoxX1), float(frameBoxY1),
+                    float(frameBoxX2), float(frameBoxY2))
+          # print("New box created:{}".format(box))
+
+        # If the dictionary entry corresponding to the frame has not been created, create one
+        if (not frames.get(frameNum)):
+          # print("Frame {} added".format(frameNum))
+          # Create the ImageInfo object corresponding to the frame
+          frames[frameNum] = ImageInfo(frameNum)
+
+        # The object info found will be added to the current ImageInfo
+        if (track.get('label') == 'head'):  # Adding a head point
+          frames[frameNum].addPoint(head)
+        elif (track.get('label') == 'worm_box'):  # Adding a box points
+          frames[frameNum].addBox(box)
 
   return frames
 
@@ -243,6 +246,7 @@ def setUpYoloDataset(frames, framesImagesDir):
     frameNumStr = splitName[1].split('.')[0]
     frameNumInt = int(frameNumStr)
 
+    # print("CHecking {} and {}".format(frameNumInt, int(nextKey)))
     if (frameNumInt == int(nextKey)):
       shutil.copyfile(originalImagePath, destinationPath)
       print("\nframe_{}:".format(frameNumStr))
@@ -267,9 +271,9 @@ def setUpYoloDataset(frames, framesImagesDir):
 def main():
 
   # First arguments passed is annotations xml file
-  frames = parseXML(sys.argv[1])
+  frames = parseXML(sys.argv[1], onlyKeyFrames=True)
 
-  # Second argument passed is dataset for imageFrames
+  # Second argument passed is folder with imageFrames
   setUpYoloDataset(frames, sys.argv[2])
 
 
