@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import sys
 
 IM_WIDTH = 1280
 IM_HEIGHT = 720
@@ -116,10 +117,12 @@ def visualize_annotations(image, box_data, keypoints_data):
 
 
 def main():
-    dir = "/home/alvaro/uja/tfg/datasets/customWormPoseDataset_v2/"
-    file_name = "frame_00000177"
-    annotationsFile = open(os.path.join(
-        dir, "labels/train/{}.txt".format(file_name)), "r")
+    # dir = "/home/alvaro/uja/tfg/datasets/customWormPoseDataset_v2/"
+    # file_name = "frame_00000177"
+    # annotationsFile = open(os.path.join(
+        # dir, "labels/train/{}.txt".format(file_name)), "r")
+    annotationsFile = open(sys.argv[2], "r")
+    print("annotations: {}".format(annotationsFile))
     annotations = annotationsFile.read()
     annotations = annotations.split('\n', 1)
 
@@ -134,8 +137,11 @@ def main():
         kp = np.array(kp[5:], dtype=float)
         keypoints_data.append(kp)
 
-    image = cv2.imread(os.path.join(
-        dir, "images/train/{}.jpg".format(file_name)))
+    # image = cv2.imread(os.path.join(
+    #     dir, "images/train/{}.jpg".format(file_name)))
+    print("image {}".format(sys.argv[1]))
+    image = cv2.imread(os.path.join("./", sys.argv[1]))
+    print("image{}".format(image))
     image = visualize_annotations(image, box_data, keypoints_data)
     annotationsFile.close()
 
