@@ -165,6 +165,7 @@ def main():
     os.makedirs(imagesFolder, exist_ok=True)
     os.makedirs(labelsFolder, exist_ok=True)
 
+    # number of new creations for each image
     numAugCreations = 5
     # Create augmentation pipeline
     transform = augmentationPipeline()
