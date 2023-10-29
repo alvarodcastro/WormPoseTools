@@ -201,8 +201,8 @@ def main():
             cv2.imwrite(newImageFile, transformed['image'])
             print("New image: {}".format(newImageFile))
 
-            vis_keypoints(
-                transformed['image'], transformed['bboxes'], transformed['keypoints'])
+            # vis_keypoints(
+            #     transformed['image'], transformed['bboxes'], transformed['keypoints'])
 
             # Write augmented labels
             annotationFile = open(newLabelsFile, "a")
