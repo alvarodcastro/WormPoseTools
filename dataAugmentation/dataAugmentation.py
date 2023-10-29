@@ -75,17 +75,21 @@ def createLabels(transformed):
 
 def augmentationPipeline():
     transformObject = A.Compose([
-        A.RandomSizedCrop(min_max_height=(256, 1025),
-                          height=512, width=512, p=0.6),
-        A.HorizontalFlip(p=0.7),
-        A.Affine(p=0.7),
+        # A.RandomSizedCrop(min_max_height=(256, 1025),
+        #                   height=640, width=640, p=0.3),
+        # A.HorizontalFlip(p=0.5),
+        A.Perspective(p=1),
+        A.Affine(rotate=[-360, 360], rotate_method="ellipse", p=1),
         A.OneOf([
-                A.Equalize(p=0.6),
-                A.ChannelShuffle(p=0.5),
+                A.ChannelShuffle(p=0.1),
                 A.HueSaturationValue(p=0.5),
-                A.RGBShift(p=0.7)
-                ], p=1),
-        A.RandomBrightnessContrast(p=0.5)
+                A.RGBShift(r_shift_limit=[-20, 80], p=0.7)
+                ], p=0.8),
+        A.OneOf([
+                A.Equalize(p=0.3),
+                A.RandomBrightnessContrast(p=0.5)
+                ], p=0.4)
+
     ],
         bbox_params=A.BboxParams(format="yolo", label_fields=['bbox_classes']),
         keypoint_params=A.KeypointParams(
@@ -196,6 +200,9 @@ def main():
             # Write augmented image
             cv2.imwrite(newImageFile, transformed['image'])
             print("New image: {}".format(newImageFile))
+
+            vis_keypoints(
+                transformed['image'], transformed['bboxes'], transformed['keypoints'])
 
             # Write augmented labels
             annotationFile = open(newLabelsFile, "a")
