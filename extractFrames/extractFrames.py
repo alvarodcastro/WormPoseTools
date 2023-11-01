@@ -20,7 +20,7 @@ def FrameCapture(path):
     success = 1
     videoName = sys.argv[1]
     if (videoName.endswith('.mp4')):
-        folderPath = "./{}_frames".format(videoName)
+        folderPath = "./{}_frames".format(videoName.split('/')[-1])
         os.mkdir(folderPath)
         while success:
 
