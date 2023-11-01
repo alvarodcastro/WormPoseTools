@@ -224,8 +224,9 @@ def setUpYoloDataset(frames, framesImagesDir):
   framesList.sort()
 
   # Create directories
-  datasetLabelsDir = os.path.join('..', 'dataset', 'labels')
-  datasetImagesDir = os.path.join('..', 'dataset', 'images')
+  origin = framesImagesDir.split('.')[0]
+  datasetLabelsDir = os.path.join('..', '{}dataset'.format(origin), 'labels')
+  datasetImagesDir = os.path.join('..', '{}dataset'.format(origin), 'images')
 
   try:
     os.makedirs(datasetLabelsDir, exist_ok=False)
