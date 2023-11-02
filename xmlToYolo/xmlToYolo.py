@@ -178,7 +178,7 @@ def parseXML(xmlFile, onlyKeyFrames=True):
 
       isKeyframe = markedEl.get('keyframe')
 
-      if (isKeyframe == '1' or not onlyKeyFrames or (frames.get(frameNum) and frames[frameNum].isKeyframe)):
+      if (isKeyframe == '1' or not onlyKeyFrames or (frames.get(frameNum) and frames[frameNum].isKeyFrame)):
 
         # If track is for head then Create a Point object corresponding to the head
         if (track.get('label') == 'head'):
