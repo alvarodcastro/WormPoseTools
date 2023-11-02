@@ -106,6 +106,7 @@ def augmentImage(image, labels, augmentationPipeline):
 
     # Get boxes and keypoints formatted for Albumentations
     bboxes, keypoints = formatLabels(os.path.join("./", labels))
+    print("bboxes:{} kp:{}".format(bboxes, keypoints))
 
     transformed = augmentationPipeline(
         image=image,
