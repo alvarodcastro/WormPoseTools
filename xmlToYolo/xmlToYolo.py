@@ -75,6 +75,7 @@ class ImageInfo:
     self.imageName = 'img_N' + frame
     self.frameNum = frame
     self.wormData = []
+    self.isKeyFrame = False
 
   def addPoint(self, pX, pY):
     self.wormData.append(WormAnnotatedData(point=Point(pX, pY)))
@@ -161,6 +162,7 @@ def parseXML(xmlFile, onlyKeyFrames=True):
 
   # Create a dictionary frame:ImageInfo. For each frame a new entry will be created
   frames = {}
+  currentKeyFrame = -1
 
   # Find tracks in data
   for track in root.findall('./track'):
@@ -176,7 +178,7 @@ def parseXML(xmlFile, onlyKeyFrames=True):
 
       isKeyframe = markedEl.get('keyframe')
 
-      if (isKeyframe == '1' or not onlyKeyFrames):
+      if (isKeyframe == '1' or not onlyKeyFrames or (frames.get(frameNum) and frames[frameNum].isKeyframe)):
 
         # If track is for head then Create a Point object corresponding to the head
         if (track.get('label') == 'head'):
