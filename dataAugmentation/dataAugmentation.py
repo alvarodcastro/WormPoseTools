@@ -109,15 +109,18 @@ def augmentImage(image, labels, augmentationPipeline):
     # print ("IN file {}".format(labels))
     # print("bboxes:{} kp:{}".format(bboxes, keypoints))
 
-    transformed = augmentationPipeline(
-        image=image,
-        bboxes=bboxes,
-        bbox_classes=bbox_classes,
-        keypoints=keypoints,
-        keypoints_classes=keypoints_classes,
+    try:
+        transformed = augmentationPipeline(
+            image=image,
+            bboxes=bboxes,
+            bbox_classes=bbox_classes,
+            keypoints=keypoints,
+            keypoints_classes=keypoints_classes,
+        )
+        return transformed
 
-    )
-    return transformed
+    except AssertionError:
+        raise AssertionError("Wrong annotations for {}".format(labels))
 
 
 def vis_keypoints(image, bboxes, keypoints, color=KEYPOINT_COLOR, diameter=5):
@@ -189,29 +192,33 @@ def main():
         # print("Original Shape: {} {}".format(IM_HEIGHT, IM_WIDTH))
 
         for n in range(numAugCreations):
-            # Transformed image and labels
-            transformed = augmentImage(image, labelsFileName, transform)
 
-            labels = createLabels(transformed)
+            try:
+                # Transformed image and labels
+                transformed = augmentImage(image, labelsFileName, transform)
 
-            newImageFile = os.path.join(
-                imagesFolder, "{}aug{}.jpg".format(frameName, n))
-            newLabelsFile = os.path.join(
-                labelsFolder, "{}aug{}.txt".format(frameName, n))
+                labels = createLabels(transformed)
 
-            # Write augmented image
-            cv2.imwrite(newImageFile, transformed['image'])
-            print("New image: {}".format(newImageFile))
+                newImageFile = os.path.join(
+                    imagesFolder, "{}aug{}.jpg".format(frameName, n))
+                newLabelsFile = os.path.join(
+                    labelsFolder, "{}aug{}.txt".format(frameName, n))
 
-            # vis_keypoints(
-            #     transformed['image'], transformed['bboxes'], transformed['keypoints'])
+                # Write augmented image
+                cv2.imwrite(newImageFile, transformed['image'])
+                print("New image: {}".format(newImageFile))
 
-            # Write augmented labels
-            annotationFile = open(newLabelsFile, "a")
-            for obj in labels:
-                annotationFile.write(obj)
-                annotationFile.write("\n")
-            annotationFile.close()
+                # vis_keypoints(
+                #     transformed['image'], transformed['bboxes'], transformed['keypoints'])
+
+                # Write augmented labels
+                annotationFile = open(newLabelsFile, "a")
+                for obj in labels:
+                    annotationFile.write(obj)
+                    annotationFile.write("\n")
+                annotationFile.close()
+            except AssertionError as e:
+                print("Augmentation for {} cannot be created: {}".format(img, e))
 
 
 if __name__ == "__main__":
