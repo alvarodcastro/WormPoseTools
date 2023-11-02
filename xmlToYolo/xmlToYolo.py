@@ -197,6 +197,7 @@ def parseXML(xmlFile, onlyKeyFrames=True):
           # print("Frame {} added".format(frameNum))
           # Create the ImageInfo object corresponding to the frame
           frames[frameNum] = ImageInfo(frameNum)
+          frames[frameNum].isKeyFrame = True
 
         # The object info found will be added to the current ImageInfo
         if (track.get('label') == 'head'):  # Adding a head point
