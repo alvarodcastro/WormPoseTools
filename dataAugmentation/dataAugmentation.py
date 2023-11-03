@@ -186,14 +186,18 @@ def main():
         image = cv2.imread(os.path.join(imagesDir, img))
         labelsFileName = os.path.join(labelsDir, label)
 
-        # Get original image shape
-        global IM_WIDTH, IM_HEIGHT
-        IM_HEIGHT, IM_WIDTH = image.shape[:2]
-        # print("Original Shape: {} {}".format(IM_HEIGHT, IM_WIDTH))
+        try:
+            # Get original image shape
+            global IM_WIDTH, IM_HEIGHT
+            IM_HEIGHT, IM_WIDTH = image.shape[:2]
+            # print("Original Shape: {} {}".format(IM_HEIGHT, IM_WIDTH))
+        except AttributeError as e:
+            print(
+                "{}: Probably dataset format not correct. No split should be created before this point".format(e))
 
-        for n in range(numAugCreations):
+        try:
+            for n in range(numAugCreations):
 
-            try:
                 # Transformed image and labels
                 transformed = augmentImage(image, labelsFileName, transform)
 
@@ -217,8 +221,8 @@ def main():
                     annotationFile.write(obj)
                     annotationFile.write("\n")
                 annotationFile.close()
-            except AssertionError as e:
-                print("Augmentation for {} cannot be created: {}".format(img, e))
+        except AssertionError as e:
+            print("Augmentation for {} cannot be created: {}".format(img, e))
 
 
 if __name__ == "__main__":
