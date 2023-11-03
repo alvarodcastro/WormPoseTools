@@ -1,33 +1,28 @@
 #!/bin/bash
 
-if [ $# -eq 2 ]
+if [ $# -gt 1 ]
 then
     newDataset='./joinedDataset'
-    echo "Joining ${1} with ${2} at ${newDataset}"
+    echo "Joining $@ at ${newDataset}"
     mkdir $newDataset
     if [ $? -eq 0 ]
     then
-        for folder in $( ls $1 );
+        for dataset in $@ ;
         do
-            mkdir $newDataset/$folder
-            for dataSplit in $( ls $1/$folder ) ;
+            for folder in $( ls $dataset );
             do
-                mkdir $newDataset/$folder/$dataSplit
-
-                # Copy first dataset
-                for file in $( ls $1/$folder/$dataSplit ) ;
+                mkdir $newDataset/$folder 2> /dev/null
+                for dataSplit in $( ls $dataset/$folder ) ;
                 do
-                    newfile=$(echo ${1%/} | rev | cut -d "/" -f1 | rev)
-                    echo "copy ${1%/}/${folder}/${dataSplit}/${file} to ${newDataset}/${folder}/${dataSplit}/${newfile}_${file}"
-                    cp ${1%/}/${folder}/${dataSplit}/${file} ${newDataset}/${folder}/${dataSplit}/${newfile}_${file}
-                done
+                    mkdir $newDataset/$folder/$dataSplit 2>/dev/null
 
-                # Copy second dataset
-                for file in $( ls $2/$folder/$dataSplit ) ;
-                do
-                    newfile=$(echo ${2%/} | rev | cut -d "/" -f1 | rev)
-                    echo "copy ${2%/}/${folder}/${dataSplit}/${file} to ${newDataset}/${folder}/${dataSplit}/${newfile}_${file}"
-                    cp ${2%/}/${folder}/${dataSplit}/${file} ${newDataset}/${folder}/${dataSplit}/${newfile}_${file}
+                    # Copy first dataset
+                    for file in $( ls $dataset/$folder/$dataSplit ) ;
+                    do
+                        newfile=$(echo ${dataset%/} | rev | cut -d "/" -f1 | rev)
+                        echo "copy ${dataset%/}/${folder}/${dataSplit}/${file} to ${newDataset}/${folder}/${dataSplit}/${newfile}_${file}"
+                        cp ${dataset%/}/${folder}/${dataSplit}/${file} ${newDataset}/${folder}/${dataSplit}/${newfile}_${file}
+                    done
                 done
             done
         done

@@ -3,9 +3,6 @@ import numpy as np
 import os
 import sys
 
-IM_WIDTH = 1280
-IM_HEIGHT = 720
-
 
 def draw_landmarks(image, landmarks):
 
@@ -146,8 +143,19 @@ def main():
     annotationsFile.close()
 
     cv2.imshow("Window", image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    while True:
+
+        # it waits till we press a key
+        key = cv2.waitKey(2000)
+
+        # if we press esc
+        if key >= 0:
+            cv2.destroyAllWindows()
+            break
+        elif cv2.getWindowProperty('Window', cv2.WND_PROP_VISIBLE) < 1:
+            cv2.destroyAllWindows()
+            break
+    cv2.waitKey(1)
 
     pass
 
