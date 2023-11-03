@@ -166,7 +166,7 @@ def main():
     imagesList = os.listdir(imagesDir)
     imagesList.sort()
     labelsList = os.listdir(labelsDir)
-    imagesList.sort()
+    labelsList.sort()
 
     augmentedDatasetPath = os.path.join("./augmentedDataset")
     imagesFolder = os.path.join(augmentedDatasetPath, "images")
