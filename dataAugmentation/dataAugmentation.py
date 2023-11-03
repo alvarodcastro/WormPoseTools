@@ -181,6 +181,8 @@ def main():
 
     for img, label in zip(imagesList, labelsList):
 
+        print("Annotating {} with {}".format(img, label))
+
         frameName = img.split('.')[0]
 
         image = cv2.imread(os.path.join(imagesDir, img))
