@@ -126,7 +126,7 @@ class NormalicedObject:
     return ("{} {} {} {} {} {} {} {}".format(self.classIndex, self.xCenter, self.yCenter, self.width, self.height, self.keypoints[0].coordX, self.keypoints[0].coordY, self.kpVisibility))
 
 
-def parseXML(xmlFile, onlyKeyFrames=True):
+def parseXML(xmlFile, onlyKeyFrames):
 
   if(onlyKeyFrames):
     print("EXTRACTING ONLY KEY FRAMES")
@@ -284,7 +284,7 @@ def main():
 
   parser = argparse.ArgumentParser()
   
-  parser.add_argument("-okf", "--onlykeyframes", help="Use key frames only")
+  parser.add_argument("-okf", "--onlykeyframes", help="Use key frames only", type=bool)
   parser.add_argument("-a", "--annotations", help="Path to annotations file")
   parser.add_argument("-f", "--frames", help="Path to frames folder")
 
