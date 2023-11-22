@@ -3,6 +3,7 @@ import os
 import shutil
 import random
 import sys
+import argparse
 
 
 # Return whether the point coordinates pased are contained on the square
@@ -126,6 +127,11 @@ class NormalicedObject:
 
 
 def parseXML(xmlFile, onlyKeyFrames=True):
+
+  if(onlyKeyFrames):
+    print("EXTRACTING ONLY KEY FRAMES")
+  else:
+    print("EXTRACTING ALL FRAMES")
   # Create tree element
   tree = ET.parse(xmlFile)
 
@@ -178,6 +184,8 @@ def parseXML(xmlFile, onlyKeyFrames=True):
 
       isKeyframe = markedEl.get('keyframe')
 
+      # If the second box is forgotten to mark as key the first one will inisialise the annotation for that frame
+      # If the first box parsed is the one forgotten, and error will raise as only the second worm will be annotated
       if (isKeyframe == '1' or not onlyKeyFrames or (frames.get(frameNum) and frames[frameNum].isKeyFrame)):
 
         # If track is for head then Create a Point object corresponding to the head
@@ -274,8 +282,14 @@ def setUpYoloDataset(frames, framesImagesDir):
 
 def main():
 
+  parser = argparse.ArgumentParser()
+  
+  parser.add_argument("-okf", "--onlykeyframes", help="Use key frames only")
+
+  args = parser.parse_args()
+
   # First arguments passed is annotations xml file
-  frames = parseXML(sys.argv[1], onlyKeyFrames=True)
+  frames = parseXML(sys.argv[1], onlyKeyFrames=args.onlykeyframes)
 
   # Second argument passed is folder with imageFrames
   setUpYoloDataset(frames, sys.argv[2])
