@@ -284,15 +284,16 @@ def main():
 
   parser = argparse.ArgumentParser()
   
-  parser.add_argument("-okf", "--onlykeyframes", help="Use key frames only", type=bool)
+  parser.add_argument("-okf", "--onlykeyframes", action="store_true", help="Use key frames only")
+  parser.add_argument("-all", "--allframes", dest="onlykeyframes", action="store_false", help="Use all frames")
   parser.add_argument("-a", "--annotations", help="Path to annotations file")
   parser.add_argument("-f", "--frames", help="Path to frames folder")
+  parser.set_defaults(onlykeyframes=True)
 
   args = parser.parse_args()
 
   # First arguments passed is annotations xml file
-  frames = parseXML(args.annotations, onlyKeyFrames=bool(args.onlykeyframes))
-
+  frames = parseXML(args.annotations, onlyKeyFrames=args.onlykeyframes)
   # Second argument passed is folder with imageFrames
   setUpYoloDataset(frames, args.frames)
 
