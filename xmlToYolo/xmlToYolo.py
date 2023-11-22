@@ -291,12 +291,11 @@ def main():
   args = parser.parse_args()
 
   # First arguments passed is annotations xml file
-  # frames = parseXML(sys.argv[1], onlyKeyFrames=args.onlykeyframes)
+  frames = parseXML(args.annotations, onlyKeyFrames=args.onlykeyframes)
 
   # Second argument passed is folder with imageFrames
-  # setUpYoloDataset(frames, sys.argv[2])
+  setUpYoloDataset(frames, args.frames)
 
-  print(args.onlykeyframes, args.annotations, args.frames)
 
 if __name__ == "__main__":
   main()
